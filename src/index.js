@@ -1,12 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './component/App/App';
 import reportWebVitals from './reportWebVitals';
-
+import store from './Store/store';
+import { Provider } from 'react-redux';
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
+import NewPost from './component/NewPost/NewPost';
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <BrowserRouter>
+      <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="add" element={<NewPost />} />  
+      </Routes>
+       
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
