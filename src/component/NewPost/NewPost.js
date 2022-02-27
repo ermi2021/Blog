@@ -2,6 +2,7 @@ import React, { Component, use } from "react";
 import Navbar from "../Navbar/Navbar";
 import { v4 as uuidv4 } from "uuid";
 import "./NewPost.css";
+import CatagorySelection from "./CatagorySelection";
 
 //material ui imports
 import Grid from "@mui/material/Grid";
@@ -9,15 +10,6 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormHelperText from "@mui/material/FormHelperText";
-import Checkbox from "@mui/material/Checkbox";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -30,11 +22,38 @@ import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
 import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
 import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+
 //content editable
 import ContentEditable from "react-contenteditable";
 import sanitizeHtml from "sanitize-html";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  "Fiction",
+  "Philosophy",
+  "My Point of Views",
+  "From Books"
+];
 
 class NewPost extends Component {
   constructor() {
@@ -42,8 +61,20 @@ class NewPost extends Component {
     this.state = {
       html: `<p>Hello <b>World</b> !</p><p>Paragraph 2</p>`,
       editable: true,
+      personName: [],
     };
   }
+
+  handleSelection = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    this.setState({
+      personName: typeof value === "string" ? value.split(",") : value,
+    });
+  };
+
   handleChange = (evt) => {
     this.setState({ html: evt.target.value });
     console.log(this.state.html);
@@ -51,7 +82,11 @@ class NewPost extends Component {
 
   sanitizeConf = {
     allowedTags: ["b", "i", "em", "strong", "a", "p", "h1", "img"],
-    allowedAttributes: { a: ["href"], img: ["src", "width", "height"], '*':["text-align", "center"] },
+    allowedAttributes: {
+      a: ["href"],
+      img: ["src", "width", "height"],
+      "*": ["text-align", "center"],
+    },
   };
 
   sanitize = () => {
@@ -74,59 +109,29 @@ class NewPost extends Component {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  {/* <FormControl
-                  sx={{ m: 3 }}
-                  component="fieldset"
-                  variant="standard"
-                >
-                  <FormLabel component="legend">
-                   Category
-                  </FormLabel>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={Fiction}
-                          onChange={handleChange}
-                          name="Fiction"
-                        />
-                      }
-                      label="Fiction"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={Philosophy}
-                          onChange={handleChange}
-                          name="Philosophy"
-                        />
-                      }
-                      label="Philosophy"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={po}
-                          onChange={handleChange}
-                          name="po"
-                        />
-                      }
-                      label="My Point of View"
-                    />
-                     <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={fb}
-                          onChange={handleChange}
-                          name="fb"
-                        />
-                      }
-                      label="From Books"
-                    />
-                  </FormGroup>
-               
-                </FormControl> */}
+                <Grid item xs={4} style={{display:"flex", flexDirection:"row", justifyContent:"center", marginTop:30}}>
+                  <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="demo-multiple-checkbox-label">
+                      Category
+                    </InputLabel>
+                    <Select
+                      labelId="demo-multiple-checkbox-label"
+                      id="demo-multiple-checkbox"
+                      multiple
+                      value={this.state.personName}
+                      onChange={this.handleSelection}
+                      input={<OutlinedInput label="Tag" />}
+                      renderValue={(selected) => selected.join(", ")}
+                      MenuProps={MenuProps}
+                    >
+                      {names.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={this.state.personName.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={8}>
                   <Typography
@@ -173,8 +178,12 @@ class NewPost extends Component {
                       cmd="justifyRight"
                       name="FormatAlignRightIcon"
                     />
-                   <IconButton onClick={this.toggleEditable}>
-                      {this.state.editable ? <VisibilityOffIcon/> :  <VisibilityIcon/>}
+                    <IconButton onClick={this.toggleEditable}>
+                      {this.state.editable ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
                     </IconButton>
                   </Stack>
                   <ContentEditable
@@ -184,8 +193,8 @@ class NewPost extends Component {
                       border: ".5px solid #bdbdbd",
                       borderRadius: "0.9px",
                       padding: "10px",
-                      background:"#f6f6f6",
-                      fontFamily:"Arial",
+                      background: "#f6f6f6",
+                      fontFamily: "Arial",
                     }}
                     className="editable"
                     tagName="pre"
