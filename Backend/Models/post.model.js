@@ -8,7 +8,21 @@ const postSchema = new Schema({
         required: false,
         unique: true,
         trim: false,
-    },           
+    },
+    content:{
+        type:String,
+        required:true,
+        unique:true,
+        trim:false,
+    },
+    category: {
+        type:String,
+        required:true,
+    }, 
+    refernces: {
+        type:String,
+        required:false
+    }      
 }, {
     timestamps:true
 });

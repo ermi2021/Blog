@@ -30,6 +30,7 @@ function AddNavbar() {
   return (
     <div>
       <Toolbar sx={{ flexGrow: 1 }}>
+      <NavLink to={`/`} style={{color:"white"}}>
         <IconButton
           size="large"
           edge="start"
@@ -40,7 +41,7 @@ function AddNavbar() {
         >
           <ArrowBackIcon />
         </IconButton>
-
+      </NavLink>
         <Typography variant="h6" component="div" sx={{ flexGrow: 0.5 }}>
           Add
         </Typography>

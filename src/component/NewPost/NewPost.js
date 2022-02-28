@@ -32,10 +32,14 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
-
+import { Divider } from "@mui/material";
 //content editable
 import ContentEditable from "react-contenteditable";
 import sanitizeHtml from "sanitize-html";
+
+//route imports
+import { useLocation } from "react-router-dom";
+import { Outlet, Link, NavLink } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -48,20 +52,16 @@ const MenuProps = {
   },
 };
 
-const names = [
-  "Fiction",
-  "Philosophy",
-  "My Point of Views",
-  "From Books"
-];
+const names = ["Fiction", "Philosophy", "My Point of Views", "From Books"];
 
 class NewPost extends Component {
   constructor() {
     super();
     this.state = {
-      html: `<p>Hello <b>World</b> !</p><p>Paragraph 2</p>`,
+      html: `<p>Hello Ermi !</p><p>Go On Write Something Cool....</p>`,
       editable: true,
       personName: [],
+      postTitle: "",
     };
   }
 
@@ -78,6 +78,10 @@ class NewPost extends Component {
   handleChange = (evt) => {
     this.setState({ html: evt.target.value });
     console.log(this.state.html);
+  };
+ 
+  titleChange = (evt) => {
+    this.setState({ postTitle: evt.target.value });
   };
 
   sanitizeConf = {
@@ -107,16 +111,23 @@ class NewPost extends Component {
             <Grid item xs={12}>
               <Navbar />
             </Grid>
-            <Grid item xs={12}>
+         
+            <Grid item xs={12} sx={{display:"flex" , flexDirection:"column"}}>
               <Grid container spacing={2}>
-                <Grid item xs={4} style={{display:"flex", flexDirection:"row", justifyContent:"center", marginTop:30}}>
-                  <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel id="demo-multiple-checkbox-label">
-                      Category
-                    </InputLabel>
+                <Grid item xs={12} md={5} lg={4} sx={{borderRightWidth:2, borderRightColor:"black"}}>
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="div"
+                    sx={{ textAlign: "left", paddingTop: 3, ml: 4 }}
+                  >
+                    Post Options
+                  </Typography>
+                  <FormControl sx={{ width: 300, ml: 4 }}>
+                    
                     <Select
-                      labelId="demo-multiple-checkbox-label"
-                      id="demo-multiple-checkbox"
+                      labelId="contained-multiple-checkbox-label"
+                      id="contained-multiple-checkbox"
                       multiple
                       value={this.state.personName}
                       onChange={this.handleSelection}
@@ -126,14 +137,34 @@ class NewPost extends Component {
                     >
                       {names.map((name) => (
                         <MenuItem key={name} value={name}>
-                          <Checkbox checked={this.state.personName.indexOf(name) > -1} />
+                          <Checkbox
+                            checked={this.state.personName.indexOf(name) > -1}
+                          />
                           <ListItemText primary={name} />
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="div"
+                    sx={{ textAlign: "left", paddingTop: 3, ml: 4 }}
+                  >
+                    References
+                  </Typography>
+                  <TextField
+                    id="contained-multiline-static"
+                  
+                    multiline
+                    rows={4}
+                    sx={{ width: 300, ml: 4}}
+                  />
+                    
                 </Grid>
-                <Grid item xs={8}>
+                <Divider orientation="vertical" flexItem sx={{width:"10px"}} />
+                <Grid item xs={12} md={6} lg={7} sx={{ml:4}}>
+               
                   <Typography
                     gutterBottom
                     variant="h6"
@@ -146,6 +177,8 @@ class NewPost extends Component {
                     sx={{ width: "80%", background: "#f6f6f6" }}
                     fullWidth
                     id="fullWidth"
+                    value={this.state.postTitle}
+                    onChange={this.titleChange}
                   />
                   <Typography
                     gutterBottom
@@ -189,12 +222,14 @@ class NewPost extends Component {
                   <ContentEditable
                     style={{
                       minHeight: "200px",
+                      maxHeight: "200px",
                       maxWidth: "77%",
                       border: ".5px solid #bdbdbd",
                       borderRadius: "0.9px",
                       padding: "10px",
                       background: "#f6f6f6",
                       fontFamily: "Arial",
+                      overflowX:"hidden"
                     }}
                     className="editable"
                     tagName="pre"

@@ -48,7 +48,7 @@ function HomeNavbar() {
           <div style={{ flexGrow: 0.7 }}>
             <SearchBar />
           </div>
-        <NavLink to={`/add`}>
+        <NavLink to={`/add`} style={{color:"white", textDecoration:"none"}}>
           <Button
             sx={{ marginLeft: 5, flexGrow: 0.2 }}
             variant="contained"
