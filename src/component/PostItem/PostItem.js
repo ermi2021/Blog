@@ -9,6 +9,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+
+//route imports
+import { useLocation } from "react-router-dom";
+import { Outlet, Link, NavLink } from "react-router-dom";
+
 class PostItem extends Component {
   render() {
     return (
@@ -23,8 +28,9 @@ class PostItem extends Component {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small">View</Button>
-            <Button size="small">Edit</Button>
+            <NavLink to={'/post'}>
+            <Button fullWidth size="large">Got To Post</Button>
+            </NavLink>
           </CardActions>
         </Card>
       </div>

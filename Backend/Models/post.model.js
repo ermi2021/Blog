@@ -22,11 +22,11 @@ const postSchema = new Schema({
     refernces: {
         type:String,
         required:false
-    }      
+    },     
 }, {
     timestamps:true
 });
 
-const User = mongoose.model('Post', postSchema);
+const Post = mongoose.model('Post', postSchema);
 
-module.exports = User;
+module.exports = Post;

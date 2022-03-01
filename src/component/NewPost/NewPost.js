@@ -35,11 +35,12 @@ import Checkbox from "@mui/material/Checkbox";
 import { Divider } from "@mui/material";
 //content editable
 import ContentEditable from "react-contenteditable";
-import sanitizeHtml from "sanitize-html";
+
 
 //route imports
 import { useLocation } from "react-router-dom";
 import { Outlet, Link, NavLink } from "react-router-dom";
+import sanitizeHtml from "sanitize-html";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -52,15 +53,15 @@ const MenuProps = {
   },
 };
 
-const names = ["Fiction", "Philosophy", "My Point of Views", "From Books"];
+const categories = ["Fiction", "Philosophy", "My Point of Views", "From Books"];
 
 class NewPost extends Component {
   constructor() {
     super();
     this.state = {
-      html: `<p>Hello Ermi !</p><p>Go On Write Something Cool....</p>`,
+      postContent: `<p></p>`,
       editable: true,
-      personName: [],
+      references: [],
       postTitle: "",
     };
   }
@@ -71,13 +72,13 @@ class NewPost extends Component {
     } = event;
 
     this.setState({
-      personName: typeof value === "string" ? value.split(",") : value,
+      references: typeof value === "string" ? value.split(",") : value,
     });
   };
 
   handleChange = (evt) => {
-    this.setState({ html: evt.target.value });
-    console.log(this.state.html);
+    this.setState({ postContent: evt.target.value });
+    console.log(this.state.postContent);
   };
  
   titleChange = (evt) => {
@@ -94,7 +95,7 @@ class NewPost extends Component {
   };
 
   sanitize = () => {
-    this.setState({ html: sanitizeHtml(this.state.html, this.sanitizeConf) });
+    this.setState({ postContent: sanitizeHtml(this.state.postContent, this.sanitizeConf) });
   };
 
   toggleEditable = () => {
@@ -110,11 +111,10 @@ class NewPost extends Component {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Navbar />
-            </Grid>
-         
+            </Grid>         
             <Grid item xs={12} sx={{display:"flex" , flexDirection:"column"}}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={5} lg={4} sx={{borderRightWidth:2, borderRightColor:"black"}}>
+              <Grid container spacing={2} sx={{marginTop:"1%"}}>
+                <Grid item xs={12} md={5} lg={4}>
                   <Typography
                     gutterBottom
                     variant="h6"
@@ -129,16 +129,16 @@ class NewPost extends Component {
                       labelId="contained-multiple-checkbox-label"
                       id="contained-multiple-checkbox"
                       multiple
-                      value={this.state.personName}
+                      value={this.state.references}
                       onChange={this.handleSelection}
                       input={<OutlinedInput label="Tag" />}
                       renderValue={(selected) => selected.join(", ")}
                       MenuProps={MenuProps}
                     >
-                      {names.map((name) => (
+                      {categories.map((name) => (
                         <MenuItem key={name} value={name}>
                           <Checkbox
-                            checked={this.state.personName.indexOf(name) > -1}
+                            checked={this.state.references.indexOf(name) > -1}
                           />
                           <ListItemText primary={name} />
                         </MenuItem>
@@ -233,9 +233,9 @@ class NewPost extends Component {
                     }}
                     className="editable"
                     tagName="pre"
-                    html={this.state.html} // innerHTML of the editable div
+                    html={this.state.postContent} // innerpostContent of the editable div
                     disabled={!this.state.editable} // use true to disable edition
-                    onChange={this.handleChange} // handle innerHTML change
+                    onChange={this.handleChange} // handle innerpostContent change
                     onBlur={this.sanitize}
                   />
                 </Grid>
